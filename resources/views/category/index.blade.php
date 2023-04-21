@@ -32,6 +32,10 @@
                         </table>
                    @endif
                 </div>
+
+                <div class="card-footer">
+                    {{ $categories->links() }}
+                </div>
             </div>
         </div>
     </div>

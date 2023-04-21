@@ -23,8 +23,16 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('users', [UserController::class, 'index']);
-Route::get('category', [CategoryController::class, 'index']);
-Route::get('category/form', [CategoryController::class, 'create']);
-Route::get('category/form/{id}', [CategoryController::class, 'create']);
-Route::post('category/save', [CategoryController::class, 'store']);
-Route::post('category/save/{id}', [CategoryController::class, 'update']);
+
+Route::controller(CategoryController::class)
+    ->prefix('category')
+    ->name('category.')
+    ->middleware('auth')
+    ->group(function () {
+        Route::match(['get', 'post'], '/', 'index')->name('index');
+        Route::get('form', 'create')->name('form');
+        Route::get('form/{id}', 'create')->name('form_update');
+        Route::post('save', 'store')->name('save');
+        Route::post('save/{id}', 'update')->name('update');    
+    }
+);
