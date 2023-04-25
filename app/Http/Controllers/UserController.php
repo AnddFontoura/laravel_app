@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    function __construct()
+    {
+        $this->model = User::class;
+    }
+    
     /**
      * Display a listing of the resource.
      */
@@ -17,14 +22,6 @@ class UserController extends Controller
         $users = User::select('id', 'name')->get();
 
         return view('user.index', compact('users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**

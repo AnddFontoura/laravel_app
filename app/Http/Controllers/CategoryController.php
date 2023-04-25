@@ -7,28 +7,37 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    function __construct() {
+        $this->model = Category::class;
+    }
+    
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::paginate(10);
-        
-        return view('category.index', compact('categories'));
-    }
+        $this->validate($request, [
+            'filterId' => 'nullable|int',
+            'filterName' => 'nullable|string|min:1|max:254'
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(int $id = null)
-    {   
-        $category = null;
+        $filter = $request->only([
+            'filterId',
+            'filterName'
+        ]);
 
-        if ($id) {
-            $category = Category::where('id', $id)->first();
+        $categories = Category::select();
+
+        if (isset($filter['filterId'])) {
+            $categories = $categories->where('id', $filter['filterId']);
+        }
+        if (isset($filter['filterName'])) {
+            $categories = $categories->where('name', 'like',  '%' . $filter['filterName'] . '%');
         }
 
-        return view('category.create', compact('category'));
+        $categories = $categories->paginate(10);
+        
+        return view('category.index', compact('categories'));
     }
 
     /**
