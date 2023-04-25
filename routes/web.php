@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,19 @@ Route::controller(CategoryController::class)
     }
 );
 
+
+Route::controller(ProductController::class)
+    ->prefix('product')
+    ->name('product.')
+    ->middleware(['auth'])
+    ->group(function () {
+        Route::match(['get', 'post'], '/', 'index')->name('index');
+        Route::get('form', 'create')->name('form');
+        Route::get('form/{id}', 'create')->name('form_update');
+        Route::post('save', 'store')->name('save');
+        Route::post('save/{id}', 'update')->name('update');    
+    }
+);
 
 Route::controller(UserController::class)
     ->prefix('user')

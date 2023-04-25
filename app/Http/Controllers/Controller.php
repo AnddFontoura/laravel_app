@@ -13,6 +13,12 @@ class Controller extends BaseController
 
     protected $model;
     protected $variablePluralName;
+    protected $categoryModel;
+
+    function __construct()
+    {
+        $this->categoryModel = Category::class;
+    }
 
     public function create(int $id = null)
     {   

@@ -35,6 +35,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('category') }}"> Categorias </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('product') }}"> Produtos </a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
