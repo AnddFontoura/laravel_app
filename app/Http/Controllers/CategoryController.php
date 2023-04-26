@@ -40,6 +40,17 @@ class CategoryController extends Controller
         return view('category.index', compact('categories'));
     }
 
+    public function create(int $id = null)
+    {   
+        $category = null;
+
+        if ($id) {
+            $category = $this->model::where('id', $id)->first();
+        }
+
+        return view('category.create', compact('category'));
+    }
+    
     /**
      * Store a newly created resource in storage.
      */

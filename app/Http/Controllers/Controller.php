@@ -20,14 +20,4 @@ class Controller extends BaseController
         $this->categoryModel = Category::class;
     }
 
-    public function create(int $id = null)
-    {   
-        $category = null;
-
-        if ($id) {
-            $category = $this->model::where('id', $id)->first();
-        }
-
-        return view('category.create', compact('category'));
-    }
 }
