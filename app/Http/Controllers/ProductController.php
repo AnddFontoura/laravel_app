@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    function __construct() {
+    function __construct()
+    {
         $this->model = Product::class;
 
         parent::__construct();
@@ -21,7 +22,7 @@ class ProductController extends Controller
     {
         $products = Product::paginate(20);
 
-        return view('product.index', compact('products')); 
+        return view('product.index', compact('products'));
     }
 
     /**
@@ -32,12 +33,12 @@ class ProductController extends Controller
         $product = null;
         $categories = $this->categoryModel::orderBy('name', 'asc')
             ->get();
-       
+
         if ($id) {
             $product = $this->model::where('id', $id)->first();
         }
 
-        return view('product.create', compact('product','categories'));
+        return view('product.create', compact('product', 'categories'));
     }
 
     /**
@@ -45,7 +46,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $this->validate($request, [
             'categoryId' => 'required|int|min:1',
             'productName' => 'required|string|min:1|max:254',
@@ -96,9 +97,42 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, int $id)
     {
-        //
+        $this->validate($request, [
+            'productName' => 'required|string|min:1|max:254',
+            'productDescription' => 'nullable|string|min:1|max:1000',
+            'productDescription' => 'nullable|string|min:1|max:1000',
+            'productPrice' => 'nullable|int|min:1|max:1000',
+            'productFile' => 'nullable|files:jpg,bmp,png,gif|min:1|max:1000',
+        ]);
+
+        $data = $request->only([
+            'categoryId',
+            'productName',
+            'productDescription',
+            'productPrice',
+            'productFile',
+        ]);
+
+        Product::where('id', $id)
+            ->update([
+                'name' => $data['productName'],
+                'description' => $data['productDescription'] ?? null,
+                'price' => $data['productPrice']
+            ]);
+
+        if ($request->file('productImage')) {
+            $product = Product::where('id', $id)->first();
+            Storage::disk('public')->delete($product->main_image);
+            
+            Product::where('id', $id)
+                ->update([
+                    'main_image' => Storage::disk('public')->put('products', $request->file('productImage'))
+                ]);
+        }
+    
+        return redirect('product')->with('message', 'Dado atualizado com sucesso');
     }
 
     /**
