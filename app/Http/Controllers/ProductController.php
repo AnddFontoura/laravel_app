@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -33,7 +34,7 @@ class ProductController extends Controller
             ->get();
        
         if ($id) {
-            $product = $this->model::where('id', $id);
+            $product = $this->model::where('id', $id)->first();
         }
 
         return view('product.create', compact('product','categories'));
@@ -67,6 +68,11 @@ class ProductController extends Controller
             'description' => $data['productDescription'] ?? null,
             'price' => $data['productPrice'] ?? null,
         ]);
+
+        if ($request->file('productImage')) {
+            $product->main_image = Storage::disk('public')->put('products', $request->file('productImage'));
+            $product->save();
+        }
 
         return redirect('product')->with('message', 'Dado criado com sucesso');
     }

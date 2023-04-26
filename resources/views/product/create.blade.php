@@ -20,12 +20,12 @@
                             </ul>
                         </div>
                         @endif
-                        
+
                         <div class="form-group mt-3">
                             <span> Categoria do Produto </span>
                             <select class="form-control" name="categoryId">
                                 @foreach($categories as $category)
-                                <option value="{{ $category->id }}" @if(isset($product) && $product->id == $category->id) selected @endif> {{ $category->name }}</option>
+                                <option value="{{ $category->id }}" @if(isset($product) && $product->category_id == $category->id) selected @endif> {{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
